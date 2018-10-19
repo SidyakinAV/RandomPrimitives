@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 /**
  * todo: description
  */
-class AlternativeBuilder<Type> {
+class AlternativeBuilder<Type> implements LazyBuilder<Type> {
     private List<Supplier<Type>> alternatives = new ArrayList<>();
 
     AlternativeBuilder(final Type alternative) {
@@ -46,7 +46,9 @@ class AlternativeBuilder<Type> {
         return this;
     }
 
-    Type get() {
-        return new RandomObjectImpl().getRandomResult(this.alternatives);
+    public Type get() {
+        final Integer randomIndex = new RandomIntPrimitivesImpl().getRandomAbsIntTo(this.alternatives.size());
+        final Supplier<Type> randomSupplier = this.alternatives.get(randomIndex);
+        return randomSupplier.get();
     }
 }

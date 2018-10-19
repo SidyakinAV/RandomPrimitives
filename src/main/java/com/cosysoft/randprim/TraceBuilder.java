@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 /**
  * todo: description
  */
-public class TraceBuilder<Type> {
+class TraceBuilder<Type> implements LazyBuilder<Type> {
 
     private Supplier<Type> supplier;
 
@@ -28,22 +28,22 @@ public class TraceBuilder<Type> {
         return Optional.ofNullable(label);
     }
 
-    public TraceBuilder(final Type alternative, TraceHolder<Type> traceHolder) {
+    TraceBuilder(@NonNull final Type alternative, @NonNull final TraceHolder<Type> traceHolder) {
         this.traceHolder = traceHolder;
         this.supplier = () -> alternative;
     }
 
-    TraceBuilder(final Supplier<Type> alternative, TraceHolder<Type> traceHolder) {
+    TraceBuilder(@NonNull final Supplier<Type> alternative, @NonNull final TraceHolder<Type> traceHolder) {
         this.traceHolder = traceHolder;
         this.supplier = alternative;
     }
 
-    TraceBuilder(final TraceHolder<Type> traceHolder) {
+    TraceBuilder(@NonNull final TraceHolder<Type> traceHolder) {
         this.traceHolder = traceHolder;
     }
 
 
-    TraceBuilder<Type> trace(@NonNull final String label) {
+    TraceBuilder<Type> traceAs(@NonNull final String label) {
         this.label = label;
         return this;
     }
@@ -53,7 +53,7 @@ public class TraceBuilder<Type> {
         return this;
     }
 
-    Type get() {
+    public Type get() {
         final Type value = this.supplier.get();
         if (this.isTraceIt) {
             this.traceHolder.saveTrace(this.getLabel(), value);

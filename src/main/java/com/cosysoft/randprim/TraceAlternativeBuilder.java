@@ -7,10 +7,10 @@ import java.util.function.Supplier;
 /**
  * todo: description
  */
-class TraceAlternativeBuilder<Type> extends TraceBuilder<Type> {
+public class TraceAlternativeBuilder<Type> extends TraceBuilder<Type> {
     private AlternativeBuilder<Type> alternativeBuilder;
 
-    public TraceAlternativeBuilder(final Type alternative, TraceHolder<Type> traceHolder) {
+    TraceAlternativeBuilder(final Type alternative, TraceHolder<Type> traceHolder) {
         super(traceHolder);
         this.alternativeBuilder = new AlternativeBuilder<>(alternative);
     }
@@ -20,32 +20,38 @@ class TraceAlternativeBuilder<Type> extends TraceBuilder<Type> {
         this.alternativeBuilder = new AlternativeBuilder<>(alternative);
     }
 
-    TraceAlternativeBuilder<Type> trace(@NonNull final String label) {
+    public TraceAlternativeBuilder<Type> traceAs(@NonNull final String label) {
         this.setLabel(label);
         return this;
     }
 
-    TraceAlternativeBuilder<Type> or(final Type alternative) {
+    @Override
+    public TraceAlternativeBuilder<Type> isTraceIt(final boolean isTraceIt) {
+        super.isTraceIt(isTraceIt);
+        return this;
+    }
+
+    public TraceAlternativeBuilder<Type> or(final Type alternative) {
         this.alternativeBuilder.or(alternative);
         return this;
     }
 
-    TraceAlternativeBuilder<Type> or(final Supplier<Type> alternative) {
+    public TraceAlternativeBuilder<Type> or(final Supplier<Type> alternative) {
         this.alternativeBuilder.or(alternative);
         return this;
     }
 
-    TraceAlternativeBuilder<Type> or(final Type... alternative) {
+    public TraceAlternativeBuilder<Type> or(final Type... alternative) {
         this.alternativeBuilder.or(alternative);
         return this;
     }
 
-    TraceAlternativeBuilder<Type> or(final Supplier<Type>... alternative) {
+    public TraceAlternativeBuilder<Type> or(final Supplier<Type>... alternative) {
         this.alternativeBuilder.or(alternative);
         return this;
     }
 
-    Type get() {
+    public Type get() {
         final Type value = this.alternativeBuilder.get();
         if (this.isTraceIt()) {
             this.getTraceHolder().saveTrace(this.getLabel(), value);

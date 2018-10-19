@@ -37,7 +37,7 @@ public abstract class BaseTrace<ValuesType> implements Tracing {
     }
 
     @Override
-    public void setAllowLabelsOverride(@NonNull final boolean isAllow) {
+    public void setAllowLabelsOverride(final boolean isAllow) {
         this.getTraceHolder().setAllowLabelsOverride(isAllow);
     }
 }

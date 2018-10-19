@@ -7,7 +7,7 @@ import java.util.Random;
 /**
  * todo: description
  */
-class RandomPrimitivesWithTraceAlternativeImpl
+public class RandomPrimitivesWithTraceAlternativeImpl
     extends BaseTraceAlternative<Integer>
     implements RandomIntPrimitives<TraceAlternativeBuilder<Integer>>
 {
