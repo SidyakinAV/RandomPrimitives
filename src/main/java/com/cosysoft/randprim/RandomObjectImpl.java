@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 /**
  * todo: description
  */
-class RandomObjectImpl implements RandomObject<Object, Object> {
+class RandomObjectImpl {
     private final RandomIntPrimitives<Integer> randomIntGenerator;
 
     public RandomObjectImpl() {
@@ -18,7 +18,7 @@ class RandomObjectImpl implements RandomObject<Object, Object> {
         this.randomIntGenerator = new RandomIntPrimitivesImpl(randomGenerator);
     }
 
-    public Object getRandomOf(final Object... objects)
+    public <ReturnType> ReturnType getRandomOf(final ReturnType... objects)
         throws IllegalArgumentException
     {
         this.validateVarArgNotEmpty(objects);
@@ -26,7 +26,7 @@ class RandomObjectImpl implements RandomObject<Object, Object> {
         return objects[randomIndex];
     }
 
-    public Object getRandomResult(final Supplier<Object>... suppliers)
+    public <ReturnType> ReturnType getRandomResult(final Supplier<ReturnType>... suppliers)
         throws IllegalArgumentException
     {
         this.validateVarArgNotEmpty(suppliers);
@@ -34,23 +34,23 @@ class RandomObjectImpl implements RandomObject<Object, Object> {
         return suppliers[randomIndex].get();
     }
 
-    public Object getRandomOf(final Collection<Object> objects)
+    public <ReturnType> ReturnType getRandomOf(final Collection<ReturnType> objects)
         throws IllegalArgumentException
     {
         this.validateVarArgNotEmpty(objects);
 
         int randomIndex = randomIntGenerator.getRandomAbsIntTo(objects.size());
-        for(Object t: objects) if (--randomIndex < 0) return t;
+        for(ReturnType t: objects) if (--randomIndex < 0) return t;
 
         throw new RuntimeException("randomIndex > objects.size()");
     }
 
-    public Object getRandomResult(final Collection<Supplier<Object>> suppliers)
+    public <ReturnType> ReturnType getRandomResult(final Collection<Supplier<ReturnType>> suppliers)
         throws IllegalArgumentException
     {
         this.validateVarArgNotEmpty(suppliers);
         int randomIndex = randomIntGenerator.getRandomAbsIntTo(suppliers.size());
-        for(Supplier<Object> t: suppliers) if (--randomIndex < 0) return t.get();
+        for(Supplier<ReturnType> t: suppliers) if (--randomIndex < 0) return t.get();
 
         throw new RuntimeException("randomIndex > objects.size()");
     }

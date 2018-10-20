@@ -7,52 +7,57 @@ import java.util.function.Supplier;
 /**
  * todo: description
  */
-public class TraceAlternativeBuilder<Type> extends TraceBuilder<Type> {
-    private AlternativeBuilder<Type> alternativeBuilder;
+public class TraceAlternativeBuilder<ReturnType extends TraceType, TraceType> extends TraceBuilder<ReturnType, TraceType> {
+    private AlternativeBuilder<ReturnType> alternativeBuilder;
 
-    TraceAlternativeBuilder(final Type alternative, TraceHolder<Type> traceHolder) {
+    TraceAlternativeBuilder(final ReturnType alternative, TraceHolder<TraceType> traceHolder) {
         super(traceHolder);
         this.alternativeBuilder = new AlternativeBuilder<>(alternative);
     }
 
-    TraceAlternativeBuilder(final Supplier<Type> alternative, TraceHolder<Type> traceHolder) {
+    TraceAlternativeBuilder(final Supplier<ReturnType> alternative, TraceHolder<TraceType> traceHolder) {
         super(traceHolder);
         this.alternativeBuilder = new AlternativeBuilder<>(alternative);
     }
 
-    public TraceAlternativeBuilder<Type> traceAs(@NonNull final String label) {
+    public TraceAlternativeBuilder<ReturnType, TraceType> traceAs(@NonNull final String label) {
         this.setLabel(label);
         return this;
     }
 
     @Override
-    public TraceAlternativeBuilder<Type> isTraceIt(final boolean isTraceIt) {
+    public TraceAlternativeBuilder<ReturnType, TraceType> isTraceIt(final boolean isTraceIt) {
         super.isTraceIt(isTraceIt);
         return this;
     }
 
-    public TraceAlternativeBuilder<Type> or(final Type alternative) {
+    public TraceAlternativeBuilder<ReturnType, TraceType> or(final ReturnType alternative) {
         this.alternativeBuilder.or(alternative);
         return this;
     }
 
-    public TraceAlternativeBuilder<Type> or(final Supplier<Type> alternative) {
+    public TraceAlternativeBuilder<ReturnType, TraceType> or(final ReturnType... alternative) {
         this.alternativeBuilder.or(alternative);
         return this;
     }
 
-    public TraceAlternativeBuilder<Type> or(final Type... alternative) {
+    public TraceAlternativeBuilder<ReturnType, TraceType> or(final Supplier<ReturnType> alternative) {
         this.alternativeBuilder.or(alternative);
         return this;
     }
 
-    public TraceAlternativeBuilder<Type> or(final Supplier<Type>... alternative) {
-        this.alternativeBuilder.or(alternative);
+    public TraceAlternativeBuilder<ReturnType, TraceType> orResult(final Supplier<ReturnType>... alternative) {
+        this.alternativeBuilder.orResult(alternative);
         return this;
     }
 
-    public Type get() {
-        final Type value = this.alternativeBuilder.get();
+    public TraceAlternativeBuilder<ReturnType, TraceType> orNull() {
+        this.alternativeBuilder.orNull();
+        return this;
+    }
+
+    public ReturnType get() {
+        final ReturnType value = this.alternativeBuilder.get();
         if (this.isTraceIt()) {
             this.getTraceHolder().saveTrace(this.getLabel(), value);
         }

@@ -11,12 +11,12 @@ import java.util.function.Supplier;
 /**
  * todo: description
  */
-class TraceBuilder<Type> implements LazyBuilder<Type> {
+public class TraceBuilder<ReturnType extends TraceType, TraceType> implements LazyBuilder<ReturnType> {
 
-    private Supplier<Type> supplier;
+    private Supplier<ReturnType> supplier;
 
     @Getter(AccessLevel.PROTECTED)
-    private TraceHolder<Type> traceHolder;
+    private TraceHolder<TraceType> traceHolder;
 
     @Setter(AccessLevel.PROTECTED)
     private String label = null;
@@ -28,33 +28,33 @@ class TraceBuilder<Type> implements LazyBuilder<Type> {
         return Optional.ofNullable(label);
     }
 
-    TraceBuilder(@NonNull final Type alternative, @NonNull final TraceHolder<Type> traceHolder) {
+    TraceBuilder(@NonNull final ReturnType alternative, @NonNull final TraceHolder<TraceType> traceHolder) {
         this.traceHolder = traceHolder;
         this.supplier = () -> alternative;
     }
 
-    TraceBuilder(@NonNull final Supplier<Type> alternative, @NonNull final TraceHolder<Type> traceHolder) {
+    TraceBuilder(@NonNull final Supplier<ReturnType> alternative, @NonNull final TraceHolder<TraceType> traceHolder) {
         this.traceHolder = traceHolder;
         this.supplier = alternative;
     }
 
-    TraceBuilder(@NonNull final TraceHolder<Type> traceHolder) {
+    TraceBuilder(@NonNull final TraceHolder<TraceType> traceHolder) {
         this.traceHolder = traceHolder;
     }
 
 
-    TraceBuilder<Type> traceAs(@NonNull final String label) {
+    public TraceBuilder<ReturnType, TraceType> traceAs(@NonNull final String label) {
         this.label = label;
         return this;
     }
 
-    TraceBuilder<Type> isTraceIt(final boolean isTraceIt) {
+    public TraceBuilder<ReturnType, TraceType> isTraceIt(final boolean isTraceIt) {
         this.isTraceIt = isTraceIt;
         return this;
     }
 
-    public Type get() {
-        final Type value = this.supplier.get();
+    public ReturnType get() {
+        final ReturnType value = this.supplier.get();
         if (this.isTraceIt) {
             this.traceHolder.saveTrace(this.getLabel(), value);
         }

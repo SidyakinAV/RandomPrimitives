@@ -25,11 +25,6 @@ class AlternativeBuilder<Type> implements LazyBuilder<Type> {
         return this;
     }
 
-    AlternativeBuilder<Type> or(final Supplier<Type> alternative) {
-        this.alternatives.add(alternative);
-        return this;
-    }
-
     AlternativeBuilder<Type> or(Type... alternatives) {
         final List<Supplier<Type>> alternativesList = Arrays.asList(alternatives).stream()
             .map(type -> {
@@ -41,7 +36,17 @@ class AlternativeBuilder<Type> implements LazyBuilder<Type> {
         return this;
     }
 
-    AlternativeBuilder<Type> or(final Supplier<Type>... alternatives) {
+    AlternativeBuilder<Type> or(final Supplier<Type> alternative) {
+        this.alternatives.add(alternative);
+        return this;
+    }
+
+    AlternativeBuilder<Type> orNull() {
+        this.alternatives.add(() -> null);
+        return this;
+    }
+
+    AlternativeBuilder<Type> orResult(final Supplier<Type>... alternatives) {
         this.alternatives.addAll(Arrays.asList(alternatives));
         return this;
     }

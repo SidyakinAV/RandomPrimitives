@@ -7,43 +7,43 @@ import java.util.Random;
 /**
  * todo: description
  */
-public class RandomPrimitivesWithTraceAlternativeImpl
+class RandomIntPrimitivesWithTraceAlternativeImpl
     extends BaseTraceAlternative<Integer>
-    implements RandomIntPrimitives<TraceAlternativeBuilder<Integer>>
+    implements RandomIntPrimitives<TraceAlternativeBuilder<Integer, Integer>>
 {
     private final RandomIntPrimitives<Integer> randomIntGenerator;
 
-    public RandomPrimitivesWithTraceAlternativeImpl() {
+    RandomIntPrimitivesWithTraceAlternativeImpl() {
         this.randomIntGenerator = new RandomIntPrimitivesImpl();
     }
 
-    public RandomPrimitivesWithTraceAlternativeImpl(@NonNull final Random randomGenerator) {
+    RandomIntPrimitivesWithTraceAlternativeImpl(@NonNull final Random randomGenerator) {
         this.randomIntGenerator = new RandomIntPrimitivesImpl(randomGenerator);
     }
 
-    public TraceAlternativeBuilder<Integer> getRandomAbsInt() {
+    public TraceAlternativeBuilder<Integer, Integer> getRandomAbsInt() {
         return this.getBuilder(this.randomIntGenerator::getRandomAbsInt);
     }
 
-    public TraceAlternativeBuilder<Integer> getRandomAbsIntTo(final int max) {
+    public TraceAlternativeBuilder<Integer, Integer> getRandomAbsIntTo(final int max) {
         return this.getBuilder(
             () -> this.randomIntGenerator.getRandomAbsIntTo(max)
         );
     }
 
-    public TraceAlternativeBuilder<Integer> getRandomAbsIntFrom(final int min) {
+    public TraceAlternativeBuilder<Integer, Integer> getRandomAbsIntFrom(final int min) {
         return this.getBuilder(
             () -> this.randomIntGenerator.getRandomAbsIntFrom(min)
         );
     }
 
-    public TraceAlternativeBuilder<Integer> getRandomAbsIntFromTo(final int min, final int max) {
+    public TraceAlternativeBuilder<Integer, Integer> getRandomAbsIntFromTo(final int min, final int max) {
         return this.getBuilder(
             () -> this.randomIntGenerator.getRandomAbsIntFromTo(min, max)
         );
     }
 
-    public TraceAlternativeBuilder<Integer> getRandomAnyPossibleInt() {
+    public TraceAlternativeBuilder<Integer, Integer> getRandomAnyPossibleInt() {
         return this.getBuilder(this.randomIntGenerator::getRandomAnyPossibleInt);
     }
 }

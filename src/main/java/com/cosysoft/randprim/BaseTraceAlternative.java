@@ -9,8 +9,8 @@ import java.util.function.Supplier;
  */
 public abstract class BaseTraceAlternative<ValuesType> extends BaseTrace<ValuesType> {
 
-    protected TraceAlternativeBuilder<ValuesType> getBuilder(@NonNull final Supplier<ValuesType> randomIntSupplier) {
-        final TraceAlternativeBuilder<ValuesType> builder = new TraceAlternativeBuilder<ValuesType>(randomIntSupplier, this.getTraceHolder());
+    protected TraceAlternativeBuilder<ValuesType, ValuesType> getBuilder(@NonNull final Supplier<ValuesType> randomIntSupplier) {
+        final TraceAlternativeBuilder<ValuesType, ValuesType> builder = new TraceAlternativeBuilder<>(randomIntSupplier, this.getTraceHolder());
         return builder;
     }
 }
