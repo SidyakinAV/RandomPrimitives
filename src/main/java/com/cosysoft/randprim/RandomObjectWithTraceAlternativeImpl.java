@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * todo: description
@@ -83,5 +84,10 @@ public class RandomObjectWithTraceAlternativeImpl implements Tracing, TracedValu
     @Override
     public <ReturnType> Optional<ReturnType> getTracedValue(final String label, final int index, final Class<ReturnType> type) {
         return this.traceHolder.getTracedValue(label, index).map(type::cast);
+    }
+
+    @Override
+    public <ReturnType> Collection<ReturnType> getTracedValues(final String label, final Class<ReturnType> type) {
+        return this.traceHolder.getTracedValues(label).stream().map(type::cast).collect(Collectors.toList());
     }
 }

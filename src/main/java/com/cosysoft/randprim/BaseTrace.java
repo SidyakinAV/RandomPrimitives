@@ -4,12 +4,15 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 
+import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * todo: description
  */
-public abstract class BaseTrace<ValuesType> implements Tracing, TracedValuesGetter {
+public abstract class BaseTrace<ValuesType> implements Tracing, TracedValuesGetter, GenericTracedValuesGetter<ValuesType> {
     @Getter(AccessLevel.PROTECTED)
     private final TraceHolder<ValuesType> traceHolder = new TraceHolderImpl<>();
 
@@ -39,5 +42,25 @@ public abstract class BaseTrace<ValuesType> implements Tracing, TracedValuesGett
     @Override
     public void setAllowLabelsOverride(final boolean isAllow) {
         this.getTraceHolder().setAllowLabelsOverride(isAllow);
+    }
+
+    @Override
+    public Optional<ValuesType> getTracedValue(final String label, final int index) {
+        return this.traceHolder.getTracedValue(label, index);
+    }
+
+    @Override
+    public Collection<ValuesType> getTracedValues(final String label) {
+        return this.traceHolder.getTracedValues(label);
+    }
+
+    @Override
+    public <ReturnType> Optional<ReturnType> getTracedValue(final String label, final int index, final Class<ReturnType> type) {
+        return this.traceHolder.getTracedValue(label, index).map(type::cast);
+    }
+
+    @Override
+    public <ReturnType> Collection<ReturnType> getTracedValues(final String label, final Class<ReturnType> type) {
+        return this.traceHolder.getTracedValues(label).stream().map(type::cast).collect(Collectors.toList());
     }
 }

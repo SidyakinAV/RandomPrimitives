@@ -23,7 +23,7 @@ class TraceHolderImpl<ValueType> implements TraceHolder<ValueType> {
 
     @Setter
     @NonNull
-    private String withoutLabelPrefix = "NO_LABEL_";
+    private String withoutLabelPrefix = "NO_LABEL";
 
     @Setter
     @NonNull
@@ -57,8 +57,7 @@ class TraceHolderImpl<ValueType> implements TraceHolder<ValueType> {
 
     private String createTraceLabel(final Optional<String> label) {
         final String traceLabel = label.orElseGet(() -> {
-            final int noLabelIndex = this.tracedValues.size() + 1;
-            return this.withoutLabelPrefix + noLabelIndex;
+            return this.withoutLabelPrefix;
         });
         return this.allLabelsPrefix + traceLabel;
     }
@@ -69,8 +68,7 @@ class TraceHolderImpl<ValueType> implements TraceHolder<ValueType> {
     }
 
     private Pair<String, Long> getTraceKey(final String label, final long index) {
-        final long lastIndex = this.getLastIndex(label);
-        return Pair.of(label, lastIndex);
+        return Pair.of(label, index);
     }
 
     private long getLastIndex(@NonNull final String traceLabel) {
@@ -79,7 +77,7 @@ class TraceHolderImpl<ValueType> implements TraceHolder<ValueType> {
             .stream()
             .map(Pair::getKey)
             .filter(s -> s.equals(traceLabel))
-            .count();
+            .count() - 1;
     }
 
     @Override

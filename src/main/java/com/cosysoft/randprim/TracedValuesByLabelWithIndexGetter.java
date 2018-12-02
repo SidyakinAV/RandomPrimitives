@@ -1,5 +1,6 @@
 package com.cosysoft.randprim;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -7,6 +8,7 @@ import java.util.Optional;
  */
 interface TracedValuesByLabelWithIndexGetter {
     <ReturnType> Optional<ReturnType> getTracedValue(String label, int index, Class<ReturnType> type);
+    <ReturnType> Collection<ReturnType> getTracedValues(String label, Class<ReturnType> type);
 
     default <ReturnType> ReturnType getTracedValueOrDie(String label, int index, Class<ReturnType> type) {
         final Optional<ReturnType> tracedValue = this.getTracedValue(label, index, type);

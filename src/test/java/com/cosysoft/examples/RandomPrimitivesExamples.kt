@@ -105,6 +105,10 @@ class RandomPrimitivesExamples {
         val value8 = builder.next()
         val value9 = builder.next()
         val value10 = builder.next()
+
+        builder.traceAs("my label")
+        val value11 = builder.next()
+        val value12 = builder.next()
     }
 
     /**

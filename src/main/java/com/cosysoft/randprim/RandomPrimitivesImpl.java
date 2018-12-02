@@ -127,7 +127,7 @@ public class RandomPrimitivesImpl implements
             .reduce((a, b) -> {
                 throw new IllegalStateException(
                     String.format("Multiple values are traced with label: '%s'."
-                        + " Consider to use getTracedValues(label, type) method, or fix labels duplication", label)
+                        + " You must fix labels duplication", label)
                 );
             })
             .orElse(Optional.empty());
