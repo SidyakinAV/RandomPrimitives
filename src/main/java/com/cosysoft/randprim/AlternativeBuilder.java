@@ -51,7 +51,7 @@ class AlternativeBuilder<Type> implements LazyBuilder<Type> {
         return this;
     }
 
-    public Type get() {
+    public Type next() {
         final Integer randomIndex = new RandomIntPrimitivesImpl().getRandomAbsIntTo(this.alternatives.size());
         final Supplier<Type> randomSupplier = this.alternatives.get(randomIndex);
         return randomSupplier.get();

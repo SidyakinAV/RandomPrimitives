@@ -53,7 +53,7 @@ public class TraceBuilder<ReturnType extends TraceType, TraceType> implements La
         return this;
     }
 
-    public ReturnType get() {
+    public ReturnType next() {
         final ReturnType value = this.supplier.get();
         if (this.isTraceIt) {
             this.traceHolder.saveTrace(this.getLabel(), value);

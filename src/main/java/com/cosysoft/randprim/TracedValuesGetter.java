@@ -3,6 +3,6 @@ package com.cosysoft.randprim;
 /**
  * todo: description
  */
-interface TracedValuesGetter extends TracedValuesByLabelGetter, TracedValuesByIndexGetter {
+interface TracedValuesGetter extends TracedValuesByLabelOmitIndexGetter {
 
 }

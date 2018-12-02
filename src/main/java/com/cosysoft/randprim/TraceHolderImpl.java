@@ -3,11 +3,15 @@ package com.cosysoft.randprim;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 /**
  * todo: description
@@ -15,7 +19,7 @@ import java.util.Optional;
 class TraceHolderImpl<ValueType> implements TraceHolder<ValueType> {
 
     @Getter
-    private final Map<String, ValueType> tracedValues = new LinkedHashMap<>();
+    private final Map<Pair<String, Long>, ValueType> tracedValues = new LinkedHashMap<>();
 
     @Setter
     @NonNull
@@ -32,7 +36,7 @@ class TraceHolderImpl<ValueType> implements TraceHolder<ValueType> {
     public void saveTrace(final Optional<String> label, final ValueType value) {
         final String traceLabel = this.createTraceLabel(label);
         this.validateTraceLabel(traceLabel);
-        this.tracedValues.put(traceLabel, value);
+        this.tracedValues.put(this.createNewTraceKey(traceLabel), value);
     }
 
     private void validateTraceLabel(final String traceLabel) {
@@ -59,23 +63,42 @@ class TraceHolderImpl<ValueType> implements TraceHolder<ValueType> {
         return this.allLabelsPrefix + traceLabel;
     }
 
-    @Override
-    public <ReturnType> Optional<ReturnType> getTracedValue(final String label, final Class<ReturnType> type) {
-        return Optional.ofNullable(
-            this.tracedValues.get(
-                this.createTraceLabel(Optional.of(label))
-            )
-        ).map(type::cast);
+    private Pair<String, Long> createNewTraceKey(final String label) {
+        final long lastIndex = this.getLastIndex(label);
+        return this.getTraceKey(label, lastIndex + 1);
+    }
+
+    private Pair<String, Long> getTraceKey(final String label, final long index) {
+        final long lastIndex = this.getLastIndex(label);
+        return Pair.of(label, lastIndex);
+    }
+
+    private long getLastIndex(@NonNull final String traceLabel) {
+        return this.tracedValues
+            .keySet()
+            .stream()
+            .map(Pair::getKey)
+            .filter(s -> s.equals(traceLabel))
+            .count();
     }
 
     @Override
-    public <ReturnType> Optional<ReturnType> getTracedValue(final Integer index, final Class<ReturnType> type) {
-        final Collection<ValueType> values = this.tracedValues.values();
+    public Optional<ValueType> getTracedValue(final String label, final int index) {
+        return Optional.ofNullable(
+            this.tracedValues.get(
+                this.getTraceKey(label, index)
+            )
+        );
+    }
 
-        ValueType value = null;
-        int i = index;
-        for(ValueType v: values) if (--i < 0) value = v;
-
-        return Optional.ofNullable(value).map(type::cast);
+    @Override
+    public Collection<ValueType> getTracedValues(final String label) {
+        final long lastIndex = this.getLastIndex(label);
+        final List<ValueType> collect = LongStream
+            .range(0, lastIndex)
+            .mapToObj(index -> this.getTraceKey(label, index))
+            .map(this.tracedValues::get)
+            .collect(Collectors.toList());
+        return collect;
     }
 }

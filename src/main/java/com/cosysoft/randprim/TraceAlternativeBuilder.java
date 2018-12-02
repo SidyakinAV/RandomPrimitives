@@ -56,8 +56,8 @@ public class TraceAlternativeBuilder<ReturnType extends TraceType, TraceType> ex
         return this;
     }
 
-    public ReturnType get() {
-        final ReturnType value = this.alternativeBuilder.get();
+    public ReturnType next() {
+        final ReturnType value = this.alternativeBuilder.next();
         if (this.isTraceIt()) {
             this.getTraceHolder().saveTrace(this.getLabel(), value);
         }

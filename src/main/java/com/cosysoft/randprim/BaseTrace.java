@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -40,15 +39,5 @@ public abstract class BaseTrace<ValuesType> implements Tracing, TracedValuesGett
     @Override
     public void setAllowLabelsOverride(final boolean isAllow) {
         this.getTraceHolder().setAllowLabelsOverride(isAllow);
-    }
-
-    @Override
-    public <ReturnType> Optional<ReturnType> getTracedValue(final String label, final Class<ReturnType> type) {
-        return this.getTraceHolder().getTracedValue(label, type);
-    }
-
-    @Override
-    public <ReturnType> Optional<ReturnType> getTracedValue(final Integer index, final Class<ReturnType> type) {
-        return this.getTraceHolder().getTracedValue(index, type);
     }
 }

@@ -81,12 +81,7 @@ public class RandomObjectWithTraceAlternativeImpl implements Tracing, TracedValu
     }
 
     @Override
-    public <ReturnType> Optional<ReturnType> getTracedValue(final String label, final Class<ReturnType> type) {
-        return this.traceHolder.getTracedValue(label, type);
-    }
-
-    @Override
-    public <ReturnType> Optional<ReturnType> getTracedValue(final Integer index, final Class<ReturnType> type) {
-        return this.traceHolder.getTracedValue(index, type);
+    public <ReturnType> Optional<ReturnType> getTracedValue(final String label, final int index, final Class<ReturnType> type) {
+        return this.traceHolder.getTracedValue(label, index).map(type::cast);
     }
 }

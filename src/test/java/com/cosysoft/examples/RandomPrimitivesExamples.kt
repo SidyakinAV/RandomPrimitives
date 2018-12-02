@@ -19,7 +19,7 @@ class RandomPrimitivesExamples {
     @Test
     fun `example of correct usage getRandomAnyPossibleInt`() {
         val rand = RandomPrimitivesImpl()
-        val value: Int = rand.randomAnyPossibleInt.get()
+        val value: Int = rand.randomAnyPossibleInt.next()
         Assert.assertTrue(value >= Int.MIN_VALUE)
         Assert.assertTrue(value <= Int.MAX_VALUE)
         value
@@ -31,7 +31,7 @@ class RandomPrimitivesExamples {
     @Test
     fun `Example of correct usage getRandomAbsInt`() {
         val rand = RandomPrimitivesImpl()
-        val value: Int = rand.randomAbsInt.get()
+        val value: Int = rand.randomAbsInt.next()
         Assert.assertTrue(value >= 0)
         Assert.assertTrue(value <= Int.MAX_VALUE)
     }
@@ -43,7 +43,7 @@ class RandomPrimitivesExamples {
     fun `Example of correct usage getRandomAbsIntFrom`() {
         val rand = RandomPrimitivesImpl()
         val min = Int.MAX_VALUE - 4
-        val randomAbsIntFrom = rand.getRandomAbsIntFrom(min).get()
+        val randomAbsIntFrom = rand.getRandomAbsIntFrom(min).next()
         Assert.assertTrue(randomAbsIntFrom >= min)
         Assert.assertTrue(randomAbsIntFrom <= Int.MAX_VALUE)
 
@@ -56,7 +56,7 @@ class RandomPrimitivesExamples {
     fun `Example of correct usage getRandomAbsIntTo`() {
         val rand = RandomPrimitivesImpl()
         val max = 10
-        val randomAbsIntTo = rand.getRandomAbsIntTo(max).get()
+        val randomAbsIntTo = rand.getRandomAbsIntTo(max).next()
         Assert.assertTrue(randomAbsIntTo >= 0)
         Assert.assertTrue(randomAbsIntTo < max)
     }
@@ -69,7 +69,7 @@ class RandomPrimitivesExamples {
         val rand = RandomPrimitivesImpl()
         val min = 100
         val max = 1000
-        val randomAbsIntFromTo = rand.getRandomAbsIntFromTo(min, max).get()
+        val randomAbsIntFromTo = rand.getRandomAbsIntFromTo(min, max).next()
         Assert.assertTrue(randomAbsIntFromTo >= min)
         Assert.assertTrue(randomAbsIntFromTo < max)
     }
@@ -95,16 +95,16 @@ class RandomPrimitivesExamples {
                         Supplier { -5 },
                         Supplier { -6 }
                 )
-        val value1 = builder.get()
-        val value2 = builder.get()
-        val value3 = builder.get()
-        val value4 = builder.get()
-        val value5 = builder.get()
-        val value6 = builder.get()
-        val value7 = builder.get()
-        val value8 = builder.get()
-        val value9 = builder.get()
-        val value10 = builder.get()
+        val value1 = builder.next()
+        val value2 = builder.next()
+        val value3 = builder.next()
+        val value4 = builder.next()
+        val value5 = builder.next()
+        val value6 = builder.next()
+        val value7 = builder.next()
+        val value8 = builder.next()
+        val value9 = builder.next()
+        val value10 = builder.next()
     }
 
     /**
@@ -120,7 +120,7 @@ class RandomPrimitivesExamples {
         val randomIntThatWillNotBeTraced: Int = randMethod()
                 .isTraceIt(false)
                 .traceAs("actually, that value will not be traced, and you'll never see this message in report")
-                .get()
+                .next()
         Assert.assertNotNull(randomIntThatWillNotBeTraced)
         val tracingReport = rand.tracingReport
     }
@@ -135,7 +135,7 @@ class RandomPrimitivesExamples {
             rand: RandomPrimitivesImpl,
             randMethod: () -> TraceAlternativeBuilder<Int, Int>)
     {
-        val randomIntWithoutLabel: Int = randMethod().get()
+        val randomIntWithoutLabel: Int = randMethod().next()
         Assert.assertNotNull(randomIntWithoutLabel)
         val tracingReport = rand.tracingReport
     }
@@ -152,7 +152,7 @@ class RandomPrimitivesExamples {
     {
         val randomInt: Int = randMethod()
                 .traceAs("randomInt")
-                .get()
+                .next()
         val tracedValueRandomInt = rand.getTracedValueOrDie("randomInt", Integer::class.java)
         Assert.assertEquals(randomInt, tracedValueRandomInt)
         Assert.assertNotNull(randomInt)
@@ -172,7 +172,7 @@ class RandomPrimitivesExamples {
         val randomIntWithAlternative: Int = randMethod()
                 .or(-1)
                 .traceAs("randomInt with alternatives")
-                .get()
+                .next()
         val tracedValueRandomIntWithAlternatives =
                 rand.getTracedValue("randomInt with alternatives", Integer::class.java)
         Assert.assertEquals(randomIntWithAlternative, tracedValueRandomIntWithAlternatives.get())
