@@ -89,8 +89,8 @@ class RandomPrimitivesExamples {
                 .or(-1)
                 .or(-2, -3)
                 .or { -4 }
-                .or { null }
-                .orNull()
+                //.or { null }
+                //.orNull()
                 .orResult(
                         Supplier { -5 },
                         Supplier { -6 }
@@ -108,7 +108,7 @@ class RandomPrimitivesExamples {
 
         builder.traceAs("my label")
         val value11 = builder.next()
-        val value12 = builder.next()
+        val value12 = builder.next(10) { t -> t > 0 }
     }
 
     /**

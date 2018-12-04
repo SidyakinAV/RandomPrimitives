@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -75,8 +76,6 @@ public class RandomPrimitivesImpl implements
         return this.objects.getRandomResult(suppliers);
     }
 
-
-
     @Override
     public String getTracingReport() {
         final String report = this.getTraceReporters().stream()
@@ -122,8 +121,12 @@ public class RandomPrimitivesImpl implements
     }
 
     @Override
-    public <ReturnType> Optional<ReturnType> getTracedValue(final String label, final int index, final Class<ReturnType> type) {
-        return this.getPresentTracedValuesStream(label, index, type)
+    public <ReturnType> Optional<ReturnType> getTracedValue(
+        final String label,
+        final int index,
+        final Class<ReturnType> type)
+    {
+        return this.getPresentTracedValuesByLabelAndIndexStream(label, index, type)
             .reduce((a, b) -> {
                 throw new IllegalStateException(
                     String.format("Multiple values are traced with label: '%s'."
@@ -133,16 +136,28 @@ public class RandomPrimitivesImpl implements
             .orElse(Optional.empty());
     }
 
-    private <ReturnType> Stream<Optional<ReturnType>> getPresentTracedValuesStream(final String label,
-                                                                                   final int index,
-                                                                                   final Class<ReturnType> type)
+    @Override
+    public <ReturnType> Collection<ReturnType> getTracedValues(final String label, final Class<ReturnType> type) {
+        return this.getTracedValuesGetterImplsStream()
+            .map(tv -> tv.getTracedValues(label, type))
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
+    }
+
+    private <ReturnType> Stream<Optional<ReturnType>> getPresentTracedValuesByLabelAndIndexStream(
+        final String label,
+        final int index,
+        final Class<ReturnType> type)
     {
-        final Optional<ReturnType> tracedValueFromObjects = this.objects.getTracedValue(label, index, type);
-        final Optional<ReturnType> tracedValueFromInts = this.ints.getTracedValue(label, index, type);
-        return Stream.of(
-            tracedValueFromObjects,
-            tracedValueFromInts
-        )
+        return this.getTracedValuesGetterImplsStream()
+            .map(tv -> tv.getTracedValue(label, index, type))
             .filter(Optional::isPresent);
+    }
+
+    private Stream<TracedValuesGetter> getTracedValuesGetterImplsStream() {
+        return Stream.of(
+            this.objects,
+            this.ints
+        );
     }
 }
